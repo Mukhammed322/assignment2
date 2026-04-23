@@ -1,26 +1,25 @@
-public class QueueList implements IntQueue{
+public class QueueList implements IntQueue {
+    private IntList data = new IntList();
+
     @Override
     public boolean empty() {
-        return false;
+        return data.isEmpty();
     }
 
     @Override
     public void add(int item) {
-
+        data.addLast(item);
     }
 
     @Override
     public int peek() {
-        return 0;
+        if (empty()) throw new RuntimeException("Queue is empty");
+        return data.getFirst();
     }
 
     @Override
     public int remove() {
-        return 0;
-    }
-
-    ///  main method to test the class.
-    static void main() {
-
+        if (empty()) throw new RuntimeException("Queue is empty");
+        return data.removeFirst();
     }
 }

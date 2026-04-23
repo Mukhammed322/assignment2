@@ -1,25 +1,25 @@
-public class StackArray implements IntStack{
+public class StackArray implements IntStack {
+    private IntArray data = new IntArray();
+
     @Override
     public boolean empty() {
-        return false;
+        return data.isEmpty();
     }
 
     @Override
     public int peek() {
-        return 0;
+        if (empty()) throw new RuntimeException("Stack is empty");
+        return data.get(data.size() - 1);
     }
 
     @Override
     public int pop() {
-        return 0;
+        if (empty()) throw new RuntimeException("Stack is empty");
+        return data.remove(data.size() - 1);
     }
 
     @Override
     public void push(int item) {
-        return;
-    }
-
-    static void main() {
-
+        data.add(item);
     }
 }

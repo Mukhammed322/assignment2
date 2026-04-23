@@ -2,95 +2,160 @@ public class IntList {
     private Node head;
     private int size;
 
-    public IntList(){
+    public IntList() {
         head = null;
+        size = 0;
     }
 
-    /// Returns the number of items in the list.
-    public int size(){
-        return 0;
+    public int size() {
+        return size;
     }
 
-    /// Returns true if the list has no items.
-    boolean isEmpty(){
-        return false;
+    public boolean isEmpty() {
+        return head == null;
     }
 
-    /// Inserts the specified item at the beginning of this list.
-    public void addFirst(int item){
+    public void addFirst(int item) {
+        head = new Node(item, head);
+        size++;
     }
 
-    /// Appends the specified item to the end of this list.
-    public void addLast(int item){
+    public void addLast(int item) {
+        if (isEmpty()) {
+            addFirst(item);
+            return;
+        }
+        Node curr = head;
+        while (curr.next != null) {
+            curr = curr.next;
+        }
+        curr.next = new Node(item);
+        size++;
     }
 
-    /// Inserts the specified item at the specified position in this list.
-    void add(int index, int item){
-
+    public void add(int index, int item) {
+        if (index < 0 || index > size) throw new IndexOutOfBoundsException();
+        if (index == 0) {
+            addFirst(item);
+            return;
+        }
+        Node prev = head;
+        for (int i = 0; i < index - 1; i++) {
+            prev = prev.next;
+        }
+        prev.next = new Node(item, prev.next);
+        size++;
     }
 
-    /// Returns the item at the specified position in this list.
-    public int get(int index){
-        return index;
+    public int get(int index) {
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+        Node curr = head;
+        for (int i = 0; i < index; i++) {
+            curr = curr.next;
+        }
+        return curr.value;
     }
 
-    /// Returns the first item in this list.
-    public int getFirst(){
-        return 0;
+    public int getFirst() {
+        if (isEmpty()) throw new RuntimeException("List is empty");
+        return head.value;
     }
 
-    /// Returns the last item in this list.
-    public int getLast(){
-        return 0;
+    public int getLast() {
+        return get(size - 1);
     }
 
-    /// Replaces the item at the specified position in this list with the specified item.
-    public int set(int index, int item){
-        return 0;
+    public int set(int index, int item) {
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+        Node curr = head;
+        for (int i = 0; i < index; i++) {
+            curr = curr.next;
+        }
+        int oldVal = curr.value;
+        curr.value = item;
+        return oldVal;
     }
 
-    /// Returns the index of the first occurrence of the specified item in this list, or -1 if this list does not contain the item.
-    public int indexOf(int item){
+    public int indexOf(int item) {
+        Node curr = head;
+        for (int i = 0; i < size; i++) {
+            if (curr.value == item) return i;
+            curr = curr.next;
+        }
         return -1;
     }
 
-    /// Removes the item at the specified position in this list.
-    public int remove(int index){
-        return 0;
+    public int remove(int index) {
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+        if (index == 0) return removeFirst();
+
+        Node prev = head;
+        for (int i = 0; i < index - 1; i++) {
+            prev = prev.next;
+        }
+        int val = prev.next.value;
+        prev.next = prev.next.next;
+        size--;
+        return val;
     }
 
-    /// Removes the first occurrence of the specified item from this list, if it is present.
-    public boolean removeItem(int item){
+    public boolean removeItem(int item) {
+        int index = indexOf(item);
+        if (index != -1) {
+            remove(index);
+            return true;
+        }
         return false;
     }
 
-    /// Removes and returns the first item from this list.
-    public int removeFirst(){
-        return 0;
+    public int removeFirst() {
+        if (isEmpty()) throw new IndexOutOfBoundsException();
+        int val = head.value;
+        head = head.next;
+        size--;
+        return val;
     }
 
-    /// Reverses the list in place.
-    public void reverse(){
+    public void reverse() {
+        Node prev = null;
+        Node current = head;
+        Node next = null;
+        while (current != null) {
+            next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+        }
+        head = prev;
     }
 
     @Override
     public String toString() {
-        return super.toString();
+        if (isEmpty()) return "[]";
+        StringBuilder sb = new StringBuilder("[");
+        Node curr = head;
+        while (curr != null) {
+            sb.append(curr.value);
+            if (curr.next != null) sb.append(", ");
+            curr = curr.next;
+        }
+        return sb.append("]").toString();
     }
 
-    // Internal class that represent a list node.
     static class Node {
         int value;
         Node next;
-        Node() {}
-        Node(int value) { this.value = value; }
+        Node(int value) { this.value = value; this.next = null; }
         Node(int value, Node next) { this.value = value; this.next = next; }
     }
 
-    /// main method to test the class.
-    static void main() {
+    public static void main(String[] args) {
         IntList list = new IntList();
-        list.addLast(5);
-        System.out.println(list);
+        list.addLast(1);
+        list.addLast(2);
+        list.addLast(3);
+        System.out.println("Before: " + list);
+        list.reverse();
+        System.out.println("After reverse: " + list);
     }
 }

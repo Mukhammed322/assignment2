@@ -1,83 +1,73 @@
-/// A resizable array of integers.
-/// It grows internally when items are added and shrinks when items are removed.
 public class IntArray {
-    /// Internal int[] representation of IntArray.
     private int[] array;
-    /// Number of elements in the array.
     private int size;
 
-    ///  Initializes the array with a default size and capacity (e.g. size is 0 and capacity is 4).
-    public IntArray(){
+    public IntArray() {
         array = new int[4];
         size = 0;
     }
 
-    /// Initializes the array by adding the items from an int[] array.
-    public IntArray(int []items){
+    public IntArray(int[] items) {
         this();
+        for (int item : items) add(item);
     }
 
-    // Getter for size.
+    private void ensureCapacity() {
+        if (size == array.length) {
+            int[] newArray = new int[array.length * 2];
+            for (int i = 0; i < size; i++){
+                newArray[i] = array[i];
+            }
+            array = newArray;
+        }
+    }
+
+    public void add(int item) {
+        ensureCapacity();
+        array[size++] = item;
+    }
+
+    public int get(int index) {
+        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+        return array[index];
+    }
+
+    public int set(int index, int item) {
+        int old = get(index);
+        array[index] = item;
+        return old;
+    }
+
+    public int remove(int index) {
+        int old = get(index);
+        for (int i = index; i < size - 1; i++) {
+            array[i] = array[i + 1];
+        }
+        size--;
+        return old;
+    }
+
+    public int indexOf(int item) {
+        for (int i = 0; i < size; i++) {
+            if (array[i] == item) return i;
+        }
+        return -1;
+    }
+
     public int size() {
         return size;
     }
 
-    ///  Returns the item at the index position in the array.
-    public int get(int index){
-        return index;
+    public boolean isEmpty() {
+        return size == 0;
     }
 
-    ///  Updates the item at index position and returns the old item.
-    public int set(int index, int item){
-        return index;
-    }
-
-    ///  Adds a new item to the array at the end position.
-    public void add(int item){
-    }
-
-    ///  Inserts a new item to the array at the index position.
-    public void addAt(int index, int item){
-    }
-
-    /// Removes the item at index i and returns it.
-    public int remove(int index){
-        return index;
-    }
-
-    /// Removes the first item and returns it.
-    public int removeFirst(){ return 0; }
-
-    /// Removes the last item and returns it.
-    public int removeLast(){ return 0; }
-
-    /// Removes the first occurrence of an item and returns whether the item was found.
-    public boolean removeItem(int item){
-        return false;
-    }
-
-    /// Returns the index of the first occurrence of an item or -1.
-    public int indexOf(int item){
-        return -1;
-    }
-
-    /// Returns true if there are no elements in the array.
-    public boolean isEmpty(){
-        return false;
-    }
-
-    /// Returns a string representation of the array, e.g. an array that contains 1,2 and 3 would look as "[1, 2, 3]".
     @Override
     public String toString() {
-        return super.toString();
-    }
-
-    ///  main method to test the class.
-    static void main(String[] args) {
-        IntArray a = new IntArray();
-        a.add(5);
-        System.out.println(a.size());
-        System.out.println(a.get(0));
-        System.out.println(a);
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < size; i++) {
+            sb.append(array[i]).append(i == size - 1 ? "" : ", ");
+        }
+        return sb.append("]").toString();
     }
 }
